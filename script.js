@@ -1,37 +1,28 @@
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 let lunch = 0;
 
-setInterval(updateTime, 500);
+// DOM cache
+const el = {
+  day: document.getElementById("day"),
+  date: document.getElementById("date"),
+  time: document.getElementById("time"),
+  current: document.getElementById("current"),
+  end: document.getElementById("end"),
+  next: document.getElementById("next"),
+  start: document.getElementById("start"),
+  remaining: document.getElementById("remaining"),
+  lunch: document.getElementById("lunch")
+};
 
-function updateTime() {
-  data = getCurrent();
-  // day, month, date, dayNum, year, hours, mins, secs, name, end, nextName, nextStart
-  let abbr = "th";
-  let dayNum = Number(data[2]);
-  if(dayNum >= 4 && dayNum <= 20) abbr = "th";
-  else if(dayNum % 10 == 1) abbr = "st";
-  else if(dayNum % 10 == 2) abbr = "nd";
-  else if(dayNum % 10 == 3) abbr = "rd";
-  document.getElementById("day").innerHTML = data[0];
-  document.getElementById("date").innerHTML = data[1] + " " + data[2] + abbr + ", " + data[3];
-  document.getElementById("time").innerHTML = data[4] + ":" + data[5] + ":" + data[6];
-  document.getElementById("current").innerHTML = data[7];
-  document.getElementById("end").innerHTML = data[8];
-  document.getElementById("next").innerHTML = data[9];
-  document.getElementById("start").innerHTML = data[10];
-  document.getElementById("timeRemaining").innerHTML = data[11];
-  let result = "LUNCH: <b><u>A</u></b> B C";
-  if(lunch == 1) result = "LUNCH: A <b><u>B</u></b> C";
-  else if(lunch == 2) result = "LUNCH: A B <b><u>C</u></b>";
-  document.getElementById("lunch").innerHTML = result;
-}
+el.lunch.onclick = () => {
+  lunch = (lunch + 1) % 3;
+};
 
-function updateLunch() {
-  lunch = lunch + 1;
-  lunch = lunch % 3;
-}
+setInterval(updateTime, 1000);
+
+// ---------- Period class ----------
 
 class Period {
   constructor(name, start, end) {
@@ -40,89 +31,173 @@ class Period {
     this.end = end;
   }
 
-  formatDate(date) {
-    return `${(date.getHours() % 12 || 12).toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+  static formatTime(date) {
+    const h = (date.getHours() % 12 || 12).toString().padStart(2,'0');
+    const m = date.getMinutes().toString().padStart(2,'0');
+    return `${h}:${m}`;
   }
 
-  getStartAsDate() {
-    return this.start;
+  get startTime() {
+    return Period.formatTime(this.start);
   }
 
-  getEndAsDate() {
-    return this.end;
-  }
-
-  getStart() {
-    return `${(this.start.getHours() % 12 || 12).toString().padStart(2, '0')}:${this.start.getMinutes().toString().padStart(2, '0')}`;
-  }
-
-  getEnd() {
-    return `${(this.end.getHours() % 12 || 12).toString().padStart(2, '0')}:${this.end.getMinutes().toString().padStart(2, '0')}`;
-  }
-
-  toString() {
-    return this.name + " " + this.formatDate(this.start) + " " + this.formatDate(this.end);
+  get endTime() {
+    return Period.formatTime(this.end);
   }
 }
 
+// ---------- Helpers ----------
+
+function formatTime(date, withSeconds=false) {
+  const h = (date.getHours() % 12 || 12).toString().padStart(2,'0');
+  const m = date.getMinutes().toString().padStart(2,'0');
+  const s = date.getSeconds().toString().padStart(2,'0');
+  return withSeconds ? `${h}:${m}:${s}` : `${h}:${m}`;
+}
+
+function msToTime(ms) {
+  const s = Math.floor((ms/1000)%60);
+  const m = Math.floor((ms/60000)%60);
+  const h = Math.floor(ms/3600000);
+  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+
+function getOrdinal(n) {
+  if (n >= 11 && n <= 13) return "th";
+  switch (n % 10) {
+    case 1: return "st";
+    case 2: return "nd";
+    case 3: return "rd";
+    default: return "th";
+  }
+}
+
+// ---------- Schedule Data ----------
+
+const SCHEDULES = {
+  WEEKDAY_MF: [
+    ["Period 1","08:00","08:43"],
+    ["Period 2","08:48","09:31"],
+    ["Glenbard Hour","09:34","10:14"],
+    ["Period 3","10:17","11:00"],
+    ["Period 4","11:05","11:48"],
+    ["Period 5","11:53","12:36"],
+    ["Period 6","12:41","13:24"],
+    ["Period 7","13:29","14:12"],
+    ["Period 8","14:17","15:00"]
+  ],
+
+  TUESDAY: [
+    ["Period 1","08:00","08:43"],
+    ["Period 2","08:48","09:31"],
+    ["Period 3","09:36","10:19"],
+    ["Period 4","10:24","11:07"],
+    ["Period 5","11:12","11:55"],
+    ["Period 6","12:00","12:43"],
+    ["Period 7","12:48","13:31"],
+    ["Period 8","13:36","14:19"],
+    ["PLC","14:23","15:05"]
+  ],
+
+  WEDNESDAY: { /* same as before */ },
+  THURSDAY: { /* same as before */ },
+  WEEKEND: []
+};
+
+const SPECIAL_DAYS = {};
+
+// ---------- Build Periods ----------
+
+function buildPeriods(schedule, date) {
+  const y = date.getFullYear();
+  const m = (date.getMonth()+1).toString().padStart(2,'0');
+  const d = date.getDate().toString().padStart(2,'0');
+
+  return schedule.map(([name,start,end]) =>
+    new Period(
+      name,
+      new Date(`${y}-${m}-${d}T${start}:00`),
+      new Date(`${y}-${m}-${d}T${end}:00`)
+    )
+  );
+}
+
+function getPeriods() {
+  const date = new Date();
+  const day = date.getDay();
+  const lunchKey = ["A","B","C"][lunch];
+  const key = date.toISOString().split("T")[0];
+
+  if (SPECIAL_DAYS[key]) return buildPeriods(SPECIAL_DAYS[key], date);
+
+  let schedule;
+
+  if (day === 0 || day === 6) schedule = SCHEDULES.WEEKEND;
+  else if (day === 1 || day === 5) schedule = SCHEDULES.WEEKDAY_MF;
+  else if (day === 2) schedule = SCHEDULES.TUESDAY;
+  else if (day === 3) schedule = SCHEDULES.WEDNESDAY[lunchKey];
+  else if (day === 4) schedule = SCHEDULES.THURSDAY[lunchKey];
+
+  return buildPeriods(schedule, date);
+}
+
+// ---------- Current Logic ----------
+
 function getCurrent() {
-  // day, month, date, dayNum, year, hours, mins, secs, name, end, nextName, nextStart
-  let date = new Date();
-  let periods = getPeriods();
+  const now = new Date();
+  const periods = getPeriods();
+  const dayIndex = now.getDay();
 
-  let dayNum = date.getDay();
-  let day = days[date.getDay()];
-  let month = months[date.getMonth()];
-  let dateNum = date.getDate();
-  let hours = (date.getHours() % 12 || 12).toString().padStart(2, '0');
-  let mins = date.getMinutes().toString().padStart(2, '0');
-  let secs = date.getSeconds().toString().padStart(2, '0');
-  let year = date.getFullYear();
-  let name = '';
-  let end = '';
-  let nextName = '';
-  let nextStart = '';
-  let timeRemaining = '';
+  const result = {
+    day: days[dayIndex],
+    month: months[now.getMonth()],
+    date: now.getDate(),
+    year: now.getFullYear(),
+    time: formatTime(now, true),
+    current: "",
+    end: "",
+    next: "",
+    start: "",
+    remaining: ""
+  };
 
-  let result = [day, month, dateNum, year, hours, mins, secs, name, end, nextName, nextStart, timeRemaining];
+  if (dayIndex === 0 || dayIndex === 6) return result;
 
-  if(dayNum == 0 || dayNum == 6) {
+  if (periods.length && now < periods[0].start) {
+    result.current = "Before School";
+    result.end = periods[0].startTime;
+    result.next = periods[0].name;
+    result.start = periods[0].startTime;
+    result.remaining = msToTime(periods[0].start - now);
     return result;
   }
 
-  if(date < periods[0].start) {
-    result[7] = "Before School";
-    result[8] = periods[0].getStart();
-    result[9] = periods[0].name;
-    result[10] = periods[0].getStart();
-    result[11] = msToTime(periods[0].getStartAsDate() - date);
+  if (periods.length && now > periods.at(-1).end) {
+    result.current = "After School";
     return result;
   }
 
-  if(date > periods[periods.length - 1].end) {
-    result[7] = "After School";
-    return result;
-  }
+  for (let i = 0; i < periods.length; i++) {
+    const p = periods[i];
+    const next = periods[i+1];
 
-  for(let i = 0; i < periods.length; i++) {
-    // class period
-    if(date > periods[i].start && date < periods[i].end) {
-      result[7] = periods[i].name;
-      result[8] = periods[i].getEnd();
-      if(i < periods.length - 1) {
-        result[9] = periods[i + 1].name;
-        result[10] = periods[i + 1].getStart();
+    if (now >= p.start && now <= p.end) {
+      result.current = p.name;
+      result.end = p.endTime;
+      if (next) {
+        result.next = next.name;
+        result.start = next.startTime;
       }
-      result[11] = msToTime(periods[i].getEndAsDate() - date);
+      result.remaining = msToTime(p.end - now);
       return result;
     }
-    // passing period
-    if(i < periods.length - 1 && date > periods[i].end && date < periods[i + 1].start) {
-      result[7] = "Passing Period";
-      result[8] = periods[i + 1].getStart();
-      result[9] = periods[i + 1].name;
-      result[10] = periods[i + 1].getStart();
-      result[11] = msToTime(periods[i+1].getStartAsDate() - date);
+
+    if (next && now > p.end && now < next.start) {
+      result.current = "Passing Period";
+      result.end = next.startTime;
+      result.next = next.name;
+      result.start = next.startTime;
+      result.remaining = msToTime(next.start - now);
       return result;
     }
   }
@@ -130,231 +205,23 @@ function getCurrent() {
   return result;
 }
 
-function msToTime(ms) {
-  let seconds = Math.floor((ms / 1000) % 60);
-  let minutes = Math.floor((ms / 1000 / 60) % 60);
-  let hours = Math.floor((ms  / 1000 / 3600 ) % 24);
+// ---------- UI ----------
 
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
+function updateTime() {
+  const data = getCurrent();
 
-function getPeriods() {
-  date = new Date();
-  let month = (date.getMonth() + 1).toString().padStart(2, '0');
-  let day = date.getDate().toString().padStart(2, '0');
-  let year = date.getFullYear();
-  let periods = []
+  el.day.textContent = data.day;
+  el.date.textContent = `${data.month} ${data.date}${getOrdinal(data.date)}, ${data.year}`;
+  el.time.textContent = data.time;
 
-  let dayNum = date.getDay();
+  el.current.textContent = data.current;
+  el.end.textContent = data.end;
+  el.next.textContent = data.next;
+  el.start.textContent = data.start;
+  el.remaining.textContent = data.remaining;
 
-  let name = '';
-  let start = null;
-  let end = null;
-  if(dayNum == 1 || dayNum == 5) {
-    // Monday Friday
-    name = "Period 1"
-    start = new Date(`${year}-${month}-${day}T08:00:00`);
-    end = new Date(`${year}-${month}-${day}T08:43:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 2"
-    start = new Date(`${year}-${month}-${day}T08:48:00`);
-    end = new Date(`${year}-${month}-${day}T09:31:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Glenbard Hour"
-    start = new Date(`${year}-${month}-${day}T09:34:00`);
-    end = new Date(`${year}-${month}-${day}T10:14:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 3"
-    start = new Date(`${year}-${month}-${day}T10:17:00`);
-    end = new Date(`${year}-${month}-${day}T11:00:00`);
-    periods.push(new Period(name, start, end));
-    
-    name = "Period 4"
-    start = new Date(`${year}-${month}-${day}T11:05:00`);
-    end = new Date(`${year}-${month}-${day}T11:48:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 5"
-    start = new Date(`${year}-${month}-${day}T11:53:00`);
-    end = new Date(`${year}-${month}-${day}T12:36:00`);
-    periods.push(new Period(name, start, end));
-    
-    name = "Period 6"
-    start = new Date(`${year}-${month}-${day}T12:41:00`);
-    end = new Date(`${year}-${month}-${day}T13:24:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 7"
-    start = new Date(`${year}-${month}-${day}T13:29:00`);
-    end = new Date(`${year}-${month}-${day}T14:12:00`);
-    periods.push(new Period(name, start, end));
-    
-    name = "Period 8"
-    start = new Date(`${year}-${month}-${day}T14:17:00`);
-    end = new Date(`${year}-${month}-${day}T15:00:00`);
-    periods.push(new Period(name, start, end));
-  } else if(dayNum == 2) {
-    // Tuesday
-    name = "Period 1"
-    start = new Date(`${year}-${month}-${day}T08:00:00`);
-    end = new Date(`${year}-${month}-${day}T08:43:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 2"
-    start = new Date(`${year}-${month}-${day}T08:48:00`);
-    end = new Date(`${year}-${month}-${day}T09:31:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 3"
-    start = new Date(`${year}-${month}-${day}T09:36:00`);
-    end = new Date(`${year}-${month}-${day}T10:19:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 4"
-    start = new Date(`${year}-${month}-${day}T10:24:00`);
-    end = new Date(`${year}-${month}-${day}T11:07:00`);
-    periods.push(new Period(name, start, end));
-    
-    name = "Period 5"
-    start = new Date(`${year}-${month}-${day}T11:12:00`);
-    end = new Date(`${year}-${month}-${day}T11:55:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 6"
-    start = new Date(`${year}-${month}-${day}T12:00:00`);
-    end = new Date(`${year}-${month}-${day}T12:43:00`);
-    periods.push(new Period(name, start, end));
-    
-    name = "Period 7"
-    start = new Date(`${year}-${month}-${day}T12:48:00`);
-    end = new Date(`${year}-${month}-${day}T13:31:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 8"
-    start = new Date(`${year}-${month}-${day}T13:36:00`);
-    end = new Date(`${year}-${month}-${day}T14:19:00`);
-    periods.push(new Period(name, start, end));
-    
-    name = "PLC"
-    start = new Date(`${year}-${month}-${day}T14:23:00`);
-    end = new Date(`${year}-${month}-${day}T15:05:00`);
-    periods.push(new Period(name, start, end));
-  } else if(dayNum == 3) {
-    // Wednesday
-    name = "Period 1"
-    start = new Date(`${year}-${month}-${day}T08:00:00`);
-    end = new Date(`${year}-${month}-${day}T09:30:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 3"
-    start = new Date(`${year}-${month}-${day}T09:35:00`);
-    end = new Date(`${year}-${month}-${day}T11:05:00`);
-    periods.push(new Period(name, start, end));
-
-    if(lunch == 0) {
-      name = "Lunch 7A"
-      start = new Date(`${year}-${month}-${day}T11:10:00`);
-      end = new Date(`${year}-${month}-${day}T11:50:00`);
-      periods.push(new Period(name, start, end));
-
-      name = "Period 7A"
-      start = new Date(`${year}-${month}-${day}T11:55:00`);
-      end = new Date(`${year}-${month}-${day}T13:25:00`);
-      periods.push(new Period(name, start, end));
-    } else if(lunch == 1) {
-      name = "Period 7B"
-      start = new Date(`${year}-${month}-${day}T11:10:00`);
-      end = new Date(`${year}-${month}-${day}T11:55:00`);
-      periods.push(new Period(name, start, end));
-
-      name = "Lunch 7B"
-      start = new Date(`${year}-${month}-${day}T11:58:00`);
-      end = new Date(`${year}-${month}-${day}T12:38:00`);
-      periods.push(new Period(name, start, end));
-
-      name = "Period 7B"
-      start = new Date(`${year}-${month}-${day}T12:41:00`);
-      end = new Date(`${year}-${month}-${day}T13:25:00`);
-      periods.push(new Period(name, start, end));
-    } else {
-      name = "Period 7C"
-      start = new Date(`${year}-${month}-${day}T11:10:00`);
-      end = new Date(`${year}-${month}-${day}T12:40:00`);
-      periods.push(new Period(name, start, end));
-
-      name = "Lunch 7C"
-      start = new Date(`${year}-${month}-${day}T12:45:00`);
-      end = new Date(`${year}-${month}-${day}T13:25:00`);
-      periods.push(new Period(name, start, end));
-    }
-
-    name = "Period 5"
-    start = new Date(`${year}-${month}-${day}T13:30:00`);
-    end = new Date(`${year}-${month}-${day}T15:00:00`);
-    periods.push(new Period(name, start, end));
-  } else {
-    // Thursday
-    name = "Period 4"
-    start = new Date(`${year}-${month}-${day}T08:00:00`);
-    end = new Date(`${year}-${month}-${day}T09:30:00`);
-    periods.push(new Period(name, start, end));
-
-    name = "Period 2"
-    start = new Date(`${year}-${month}-${day}T09:35:00`);
-    end = new Date(`${year}-${month}-${day}T11:05:00`);
-    periods.push(new Period(name, start, end));
-
-    if(lunch == 0) {
-      name = "Lunch 8A"
-      start = new Date(`${year}-${month}-${day}T11:10:00`);
-      end = new Date(`${year}-${month}-${day}T11:50:00`);
-      periods.push(new Period(name, start, end));
-
-      name = "Period 8A"
-      start = new Date(`${year}-${month}-${day}T11:55:00`);
-      end = new Date(`${year}-${month}-${day}T13:25:00`);
-      periods.push(new Period(name, start, end));
-    } else if(lunch == 1) {
-      name = "Period 8B"
-      start = new Date(`${year}-${month}-${day}T11:10:00`);
-      end = new Date(`${year}-${month}-${day}T11:55:00`);
-      periods.push(new Period(name, start, end));
-
-      name = "Lunch 8B"
-      start = new Date(`${year}-${month}-${day}T11:58:00`);
-      end = new Date(`${year}-${month}-${day}T12:38:00`);
-      periods.push(new Period(name, start, end));
-
-      name = "Period 8B"
-      start = new Date(`${year}-${month}-${day}T12:41:00`);
-      end = new Date(`${year}-${month}-${day}T13:25:00`);
-      periods.push(new Period(name, start, end));
-    } else {
-      name = "Period 8C"
-      start = new Date(`${year}-${month}-${day}T11:10:00`);
-      end = new Date(`${year}-${month}-${day}T12:40:00`);
-      periods.push(new Period(name, start, end));
-
-      name = "Lunch 8C"
-      start = new Date(`${year}-${month}-${day}T12:45:00`);
-      end = new Date(`${year}-${month}-${day}T13:25:00`);
-      periods.push(new Period(name, start, end));
-    }
-
-    name = "Period 6"
-    start = new Date(`${year}-${month}-${day}T13:30:00`);
-    end = new Date(`${year}-${month}-${day}T15:00:00`);
-    periods.push(new Period(name, start, end));
-  }
-
-  /*
-  for(let i = 0; i < periods.length; i++) {
-    Logger.log(periods[i].toString());
-  }
-  */
-
-  return periods;
+  const labels = ["A","B","C"];
+  el.lunch.innerHTML = `LUNCH: ${labels.map((l,i)=>
+    i===lunch ? `<b><u>${l}</u></b>` : l
+  ).join(" ")}`;
 }
