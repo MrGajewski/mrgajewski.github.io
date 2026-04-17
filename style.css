@@ -13,7 +13,6 @@ h1 {
   line-height: 50px;
   margin: 10px 0 20px;
   text-transform: uppercase;
-  text-shadow: 2px 2px 0 #000;
   margin: 10px 0 24px;
   text-align: center;
 }
@@ -27,9 +26,22 @@ h2 {
   line-height: 10px;
   margin: 10px 0 20px;
   text-transform: uppercase;
-  text-shadow: 2px 2px 0 #000;
   margin: 10px 0 24px;
   text-align: center;
+}
+
+h3 {
+  font-size: 92px;
+  font-weight: 600;
+  font-family: 'Fredoka', sans-serif;
+  color: #cd9700;
+}
+
+h4 {
+  font-size: 92px;
+  font-weight: 600;
+  font-family: 'Gruppo', sans-serif;
+  color: #cd9700;
 }
 
 table {
@@ -80,35 +92,4 @@ tbody tr:last-of-type {
   text-shadow: 2px 2px 0 #000;
   margin: 10px 0 24px;
   text-align: center;
-}
-
-
-h4 {
-  font-size: 92px;
-  font-weight: 600;
-  font-family: 'Gruppo', sans-serif;
-  color: #cd9700;
-  text-shadow: 1px 1px 0px #826003,
-              1px 2px 0px #826003,
-              1px 3px 0px #826003,
-              1px 4px 0px #826003,
-              1px 8px 5px rgba(16, 16, 16, 0.5),
-              1px 12px 10px rgba(16, 16, 16, 0.4),
-              1px 16px 30px rgba(16, 16, 16, 0.3),
-              1px 20px 50px rgba(16, 16, 16, 0.2);
-}
-
-h3 {
-  font-size: 92px;
-  font-weight: 600;
-  font-family: 'Fredoka', sans-serif;
-  color: #cd9700;
-  text-shadow: 1px 1px 0px #826003,
-              1px 2px 0px #826003,
-              1px 3px 0px #826003,
-              1px 4px 0px #826003,
-              1px 8px 5px rgba(16, 16, 16, 0.5),
-              1px 12px 10px rgba(16, 16, 16, 0.4),
-              1px 16px 30px rgba(16, 16, 16, 0.3),
-              1px 20px 50px rgba(16, 16, 16, 0.2);
 }
