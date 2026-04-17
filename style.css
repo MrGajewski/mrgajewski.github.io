@@ -1,0 +1,114 @@
+body {
+  background-color: #301934;
+  background-color: #fefefe;
+  background-color: #4f4f4f;
+}
+
+h1 {
+  font-size: 94px;
+  letter-spacing: -1px;
+  font-weight: 300;
+  font-family: 'Consolas', sans-serif;
+  color: #cd9700;
+  line-height: 50px;
+  margin: 10px 0 20px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #000,
+  margin: 10px 0 24px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 30px;
+  letter-spacing: -1px;
+  font-weight: normal;
+  font-family: 'Fredoka', sans-serif;
+  color: #cd9700;
+  line-height: 10px;
+  margin: 10px 0 20px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #000,
+  margin: 10px 0 24px;
+  text-align: center;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  font-size: 1.2em;
+  font-family: 'Roboto', sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+thead tr {
+    background-color: #cd9700;
+    font-weight: bold;
+    color: #000000;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+tbody tr:nth-of-type(odd) {
+    background-color: #dddddd;
+}
+
+tbody tr:last-of-type {
+    border-bottom: 2px solid #cd9700;
+}
+
+.brand {
+  font-size: 18px;
+  letter-spacing: -1px;
+  font-weight: 100;
+  font-family: 'Source Code Pro', sans-serif;
+  color: #cd9700;
+  line-height: 20px;
+  margin: 10px 0 20px;
+  text-shadow: 2px 2px 0 #000,
+  margin: 10px 0 24px;
+  text-align: center;
+}
+
+
+h4 {
+  font-size: 92px;
+  font-weight: 600;
+  font-family: 'Gruppo', sans-serif;
+  color: #cd9700;
+  text-shadow: 1px 1px 0px #826003,
+              1px 2px 0px #826003,
+              1px 3px 0px #826003,
+              1px 4px 0px #826003,
+              1px 8px 5px rgba(16, 16, 16, 0.5),
+              1px 12px 10px rgba(16, 16, 16, 0.4),
+              1px 16px 30px rgba(16, 16, 16, 0.3),
+              1px 20px 50px rgba(16, 16, 16, 0.2);
+}
+
+h3 {
+  font-size: 92px;
+  font-weight: 600;
+  font-family: 'Fredoka', sans-serif;
+  color: #cd9700;
+  text-shadow: 1px 1px 0px #826003,
+              1px 2px 0px #826003,
+              1px 3px 0px #826003,
+              1px 4px 0px #826003,
+              1px 8px 5px rgba(16, 16, 16, 0.5),
+              1px 12px 10px rgba(16, 16, 16, 0.4),
+              1px 16px 30px rgba(16, 16, 16, 0.3),
+              1px 20px 50px rgba(16, 16, 16, 0.2);
+}
