@@ -51,7 +51,7 @@ class Period {
 function formatTime(date, withSeconds=false) {
   const h = (date.getHours() % 12 || 12).toString().padStart(2,'0');
   const m = date.getMinutes().toString().padStart(2,'0');
-  const s = date.getSeconds().toString().padStart(2,'0');
+  const s = (date.getSeconds() + 1).toString().padStart(2,'0');
   return withSeconds ? `${h}:${m}:${s}` : `${h}:${m}`;
 }
 
