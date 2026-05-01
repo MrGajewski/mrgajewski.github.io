@@ -20,7 +20,7 @@ el.lunch.onclick = () => {
   lunch = (lunch + 1) % 3;
 };
 
-setInterval(updateTime, 1000);
+setInterval(updateTime, 500);
 
 // ---------- Period class ----------
 
@@ -112,7 +112,7 @@ const SCHEDULES = {
       ["Period 1","08:00","09:30"],
       ["Period 3","09:35","11:05"],
       ["Period 7B","11:10","11:55"],
-      ["Lunch","11:58","12:38"],  // ⚠️ fixed overlap
+      ["Lunch","11:58","12:38"],
       ["Period 7B","12:41","13:25"],
       ["Period 5","13:30","15:00"]
     ],
