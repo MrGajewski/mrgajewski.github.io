@@ -1,54 +1,177 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
+  <head>
+    <title>Glenbard Clock</title>
+    <base target="_top">
 
-    .video-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -1;
-      pointer-events: none;
-    }
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,600">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
 
-    .video-bg iframe {
-      width: 100%;
-      height: 100%;
-    }
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Roboto', sans-serif;
+        color: white;
+        overflow: hidden;
+      }
 
-    .content {
-      position: relative;
-      z-index: 1;
-      color: white;
-      text-align: center;
-      font-size: 2rem;
-      margin-top: 20%;
-      text-shadow: 0 0 10px black;
-    }
-  </style>
-</head>
-<body>
+      /* Background video */
+      .video-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -2;
+        pointer-events: none;
+      }
 
-<div class="video-bg">
-  <iframe
-    src="https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0&loop=1&playlist=9mg9PoFEX2U"
-    title="Aquarium Live"
-    frameborder="0"
-    allow="autoplay; fullscreen">
-  </iframe>
-</div>
+      .video-bg iframe {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 177.78vh;
+        height: 100vh;
+        transform: translate(-50%, -50%);
+      }
 
-<div class="content">
-  Otters!
-</div>
+      /* Dark overlay for readability */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.35);
+        backdrop-filter: blur(4px);
+        z-index: -1;
+      }
 
-</body>
+      /* Main content */
+      .container {
+        text-align: center;
+        margin-top: 8vh;
+      }
+
+      h1 {
+        font-size: 4rem;
+        font-weight: 300;
+        margin: 0;
+      }
+
+      h2 {
+        font-weight: 300;
+        margin: 5px;
+        opacity: 0.85;
+      }
+
+      table {
+        margin: 30px auto;
+        border-collapse: collapse;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(6px);
+        border-radius: 12px;
+        overflow: hidden;
+        font-size: 1.2rem;
+      }
+
+      td, th {
+        padding: 12px 20px;
+      }
+
+      thead {
+        background: rgba(255,255,255,0.1);
+        font-weight: 500;
+      }
+
+      tbody tr {
+        border-top: 1px solid rgba(255,255,255,0.1);
+      }
+
+      #remaining {
+        font-size: 2rem;
+        font-family: 'Source Code Pro', monospace;
+      }
+
+      .brand {
+        position: fixed;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        opacity: 0.6;
+      }
+    </style>
+
+    <script defer src="script.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Otter livestream background (e.g. from Monterey Bay Aquarium) -->
+    <div class="video-bg">
+      <iframe
+        src="https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0&loop=1&playlist=9mg9PoFEX2U"
+        frameborder="0"
+        allow="autoplay; fullscreen">
+      </iframe>
+    </div>
+
+    <!-- Dark overlay -->
+    <div class="overlay"></div>
+
+    <!-- Content -->
+    <div class="container">
+      <h2 id="day"></h2>
+      <h2 id="date"></h2>
+      <h1 id="time"></h1>
+
+      <table>
+        <thead>
+          <tr>
+            <td>CURRENT CLASS</td>
+            <th>ENDS AT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="current"></td>
+            <td id="end"></td>
+          </tr>
+        </tbody>
+
+        <thead>
+          <tr>
+            <td>NEXT CLASS</td>
+            <th>STARTS AT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="next"></td>
+            <td id="start"></td>
+          </tr>
+        </tbody>
+
+        <thead>
+          <tr>
+            <td colspan="2">TIME REMAINING</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" id="remaining"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="lunch" onclick="updateLunch()"></h2>
+    </div>
+
+    <div class="brand">Glenbard Clock</div>
+
+  </body>
 </html>
