@@ -20,16 +20,6 @@
       }
 
       /* Background video */
-      .video-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: -2;
-        pointer-events: none;
-      }
-
       .video-bg iframe {
         position: absolute;
         top: 50%;
@@ -40,7 +30,16 @@
         pointer-events: none;
       }
 
-      /* DARK OVERLAY */
+      .video-bg iframe {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 177.78vh; /* 16:9 ratio */
+        height: 100vh;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Overlay */
       .overlay {
         position: fixed;
         top: 0;
@@ -51,7 +50,7 @@
         z-index: -1;
       }
 
-      /* CLOCK PANEL */
+      /* Clock panel */
       .container {
         text-align: center;
         margin: 8vh auto;
@@ -109,7 +108,7 @@
         opacity: 0.5;
       }
 
-      /* VIDEO BUTTONS */
+      /* DROPDOWN SELECTOR */
       .video-picker {
         position: fixed;
         top: 10px;
@@ -117,18 +116,15 @@
         z-index: 10;
       }
 
-      .video-picker button {
-        margin: 4px;
-        padding: 8px 12px;
-        border: none;
+      .video-picker select {
+        padding: 8px 10px;
         border-radius: 8px;
+        border: none;
         background: rgba(0,0,0,0.6);
         color: white;
+        font-size: 0.9rem;
+        outline: none;
         cursor: pointer;
-      }
-
-      .video-picker button:hover {
-        background: rgba(255,255,255,0.2);
       }
     </style>
 
@@ -137,10 +133,12 @@
 
   <body>
 
-    <!-- VIDEO SELECTOR -->
+    <!-- VIDEO SELECTOR DROPDOWN -->
     <div class="video-picker">
-      <button onclick="setVideo('otter')">Otters</button>
-      <button onclick="setVideo('jellyfish')">Jellyfish</button>
+      <select id="videoSelect" onchange="setVideo(this.value)">
+        <option value="otter">Otters</option>
+        <option value="jellyfish">Jellyfish</option>
+      </select>
     </div>
 
     <!-- BACKGROUND VIDEO -->
@@ -206,7 +204,7 @@
 
     <div class="brand">Glenbard Clock Provided By Paul Gajewski</div>
 
-    <!-- VIDEO SWITCHER SCRIPT -->
+    <!-- VIDEO SWITCH SCRIPT -->
     <script>
       function setVideo(type) {
         const video = document.getElementById("bgVideo");
