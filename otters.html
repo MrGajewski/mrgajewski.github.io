@@ -19,16 +19,6 @@
       }
 
       /* Background video */
-      .video-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: -2;
-        pointer-events: none;
-      }
-
       .video-bg iframe {
         position: absolute;
         top: 50%;
@@ -37,6 +27,15 @@
         height: 100vh;
         transform: translate(-50%, -50%);
         pointer-events: none;
+      }
+
+      .video-bg iframe {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 177.78vh; /* 16:9 ratio */
+        height: 100vh;
+        transform: translate(-50%, -50%);
       }
 
       /* Light dim overlay ONLY (no blur) */
