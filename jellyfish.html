@@ -16,6 +16,7 @@
         font-family: 'Roboto', sans-serif;
         color: white;
         overflow: hidden;
+        background: black;
       }
 
       /* Background video */
@@ -33,23 +34,23 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 177.78vh; /* 16:9 */
+        width: 177.78vh; /* 16:9 ratio */
         height: 100vh;
         transform: translate(-50%, -50%);
       }
 
-      /* Light dim overlay ONLY (no blur) */
+      /* Slight dark overlay (no blur) */
       .overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.25);
+        background: rgba(0,0,0,0.3);
         z-index: -1;
       }
 
-      /* Clock container (this is what gets the blur now) */
+      /* Clock panel */
       .container {
         text-align: center;
         margin: 8vh auto;
@@ -59,7 +60,7 @@
         background: rgba(0,0,0,0.35);
         backdrop-filter: blur(10px);
         border-radius: 16px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.5);
       }
 
       h1 {
@@ -104,7 +105,7 @@
         width: 100%;
         text-align: center;
         font-size: 0.8rem;
-        opacity: 0.6;
+        opacity: 0.5;
       }
     </style>
 
@@ -113,16 +114,16 @@
 
   <body>
 
-    <!-- jellyfish livestream background -->
+    <!-- Jellyfish livestream background -->
     <div class="video-bg">
       <iframe
-        src="https://www.youtube.com/embed/m1XcdxjVGos?si=9vd5zER1-NeJ58G0"
+        src="https://www.youtube.com/embed/m1XcdxjVGos?autoplay=1&mute=1&controls=0&loop=1&playlist=m1XcdxjVGos"
         frameborder="0"
         allow="autoplay; fullscreen">
       </iframe>
     </div>
 
-    <!-- Slight dim layer -->
+    <!-- Dim layer -->
     <div class="overlay"></div>
 
     <!-- Clock content -->
@@ -173,7 +174,7 @@
       <h2 id="lunch" onclick="updateLunch()"></h2>
     </div>
 
-    <div class="brand">Glenbard Clock Provided By Paul Gajewski</div>
+    <div class="brand">Glenbard Clock</div>
 
   </body>
 </html>
