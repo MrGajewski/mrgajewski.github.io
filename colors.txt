@@ -1,0 +1,14 @@
+Glenbard School Theme Colors
+Glenbard East
+Primary: Red — rgb(235, 0, 41)
+Secondary: Black — rgb(0, 0, 0)
+Glenbard North
+Primary: Gold — rgb(205, 151, 0)
+Secondary: Black — rgb(0, 0, 0)
+Glenbard South
+Primary: Red — rgb(235, 0, 41)
+Secondary: Blue — rgb(46, 85, 151)
+Tertiary: Gray — rgb(160, 160, 160)
+Glenbard West
+Primary: Green — rgb(0, 88, 60)
+Secondary: Green — rgb(0, 88, 60)
