@@ -19,17 +19,7 @@
         background: black;
       }
 
-      /* VIDEO BACKGROUND */
-      .video-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: -2;
-        pointer-events: none;
-      }
-
+      /* Background video */
       .video-bg iframe {
         position: absolute;
         top: 50%;
@@ -37,9 +27,19 @@
         width: 100vw;
         height: 100vh;
         transform: translate(-50%, -50%);
+        pointer-events: none;
       }
 
-      /* DARK OVERLAY */
+      .video-bg iframe {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 177.78vh; /* 16:9 ratio */
+        height: 100vh;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Slight dark overlay (no blur) */
       .overlay {
         position: fixed;
         top: 0;
@@ -50,7 +50,7 @@
         z-index: -1;
       }
 
-      /* CLOCK PANEL */
+      /* Clock panel */
       .container {
         text-align: center;
         margin: 8vh auto;
@@ -107,54 +107,26 @@
         font-size: 0.8rem;
         opacity: 0.5;
       }
-
-      /* VIDEO BUTTONS */
-      .video-picker {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        z-index: 10;
-      }
-
-      .video-picker button {
-        margin: 4px;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 8px;
-        background: rgba(0,0,0,0.6);
-        color: white;
-        cursor: pointer;
-      }
-
-      .video-picker button:hover {
-        background: rgba(255,255,255,0.2);
-      }
     </style>
 
     <script defer src="script.js"></script>
   </head>
 
   <body>
-
-    <!-- VIDEO SELECTOR -->
-    <div class="video-picker">
-      <button onclick="setVideo('otter')">Otters</button>
-      <button onclick="setVideo('jellyfish')">Jellyfish</button>
-    </div>
-
-    <!-- BACKGROUND VIDEO -->
+    <!-- Jellyfish livestream background -->
     <div class="video-bg">
       <iframe
-        src="https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0&loop=1&playlist=9mg9PoFEX2U"
+        src="https://www.youtube.com/embed/m1XcdxjVGos?autoplay=1&mute=1&controls=0&playsinline=1"
         frameborder="0"
-        allow="autoplay; fullscreen">
+        allow="autoplay; fullscreen"
+        allowfullscreen>
       </iframe>
     </div>
 
-    <!-- OVERLAY -->
+    <!-- Dim layer -->
     <div class="overlay"></div>
 
-    <!-- CLOCK CONTENT -->
+    <!-- Clock content -->
     <div class="container">
       <h2 id="day"></h2>
       <h2 id="date"></h2>
@@ -203,21 +175,6 @@
     </div>
 
     <div class="brand">Glenbard Clock Provided By Paul Gajewski</div>
-    <div class="brand">Animals</div>
-
-    <!-- VIDEO SWITCHER SCRIPT -->
-    <script>
-      function setVideo(type) {
-        const video = document.getElementById("bgVideo");
-
-        const videos = {
-          otter: "https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0",
-          jellyfish: "https://www.youtube.com/embed/m1XcdxjVGos?autoplay=1&mute=1&controls=0"
-        };
-
-        video.src = videos[type];
-      }
-    </script>
 
   </body>
 </html>
