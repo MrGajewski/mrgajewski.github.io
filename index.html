@@ -3,61 +3,108 @@
   <head>
     <title>Glenbard Clock</title>
     <base target="_top">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Actor">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Gruppo">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Consolas">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=WindSong">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,600">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">    
+
     <script defer src="script.js"></script>
   </head>
+
   <body>
 
-    <p>&nbsp</p>
+    <!-- DROPDOWN -->
+    <div class="video-picker">
+      <select id="modeSelect" onchange="setMode(this.value)">
+        <optgroup label="School Themes">
+          <option value="north">Glenbard North</option>
+          <option value="east">Glenbard East</option>
+          <option value="south">Glenbard South</option>
+          <option value="west">Glenbard West</option>
+        </optgroup>
+        
+        <optgroup label="Animal Cams">
+          <option value="otter">Otters</option>
+          <option value="jellyfish">Jellyfish</option>
+          <option value="moonjelly">Moon Jelly</option>
+          <option value="wildlife">Wildlife</option>
+          <option value="penguin">Penguin</option>
+          <option value="baldeagle">Bald Eagle</option>
+        </optgroup>
+        
+        <optgroup label="Clock Position">
+          <option value="left">Left</option>
+          <option value="center">Center</option>
+          <option value="right">Right</option>
+        </optgroup>
+      </select>
+    </div>
 
-    <h2 id="day"></h2>
-    <h2 id="date"></h2>
-    <h1 id="time"></h1>
-    <table>
-      <thead>
-        <tr>
-          <td>CURRENT CLASS</td>
-          <th>ENDS AT</td>
-        </tr>
-      <thead>
-      <tbody>
-        <tr>
-          <td id="current"></td>
-          <td id="end"></td>
-        </tr>
-      </tbody>
-      <thead>
-        <tr>
-          <td>NEXT CLASS</td>
-          <th>STARTS AT</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td id="next"></td>
-          <td id="start"></td>
-        </tr>
-      </tbody>
-      <thead>
-        <tr>
-          <td colspan=2>TIME REMAINING</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td colspan=2 id="remaining"></td>
-        </tr>
-      </tbody>
-    </table>
-    <h2 id="lunch" onclick="updateLunch()"></h2>
+    <!-- VIDEO -->
+    <div class="video-bg" id="videoBg">
+      <iframe
+        id="bgVideo"
+        src="https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0"
+        frameborder="0"
+        allow="autoplay; fullscreen">
+      </iframe>
+    </div>
+
+    <!-- LOGO LAYER (NEW) -->
+    <img id="logoBg" class="logo-bg" src="" />
+
+    <div class="overlay"></div>
+
+    <!-- CLOCK -->
+    <div class="container">
+      <h2 id="day"></h2>
+      <h2 id="date"></h2>
+      <h1 id="time"></h1>
+
+      <table>
+        <thead>
+          <tr>
+            <td>CURRENT CLASS</td>
+            <th>ENDS AT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="current"></td>
+            <td id="end"></td>
+          </tr>
+        </tbody>
+
+        <thead>
+          <tr>
+            <td>NEXT CLASS</td>
+            <th>STARTS AT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="next"></td>
+            <td id="start"></td>
+          </tr>
+        </tbody>
+
+        <thead>
+          <tr>
+            <td colspan="2">TIME REMAINING</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" id="remaining"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="lunch" onclick="updateLunch()"></h2>
+    </div>
+
     <div class="brand">Glenbard Clock Provided By Paul Gajewski</div>
+
   </body>
 </html>
