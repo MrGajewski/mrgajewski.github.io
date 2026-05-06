@@ -25,7 +25,7 @@
         transition: background 0.5s ease;
       }
 
-      /* VIDEO BACKGROUND */
+      /* Background video */
       .video-bg iframe {
         position: absolute;
         top: 50%;
@@ -33,9 +33,10 @@
         width: 100vw;
         height: 100vh;
         transform: translate(-50%, -50%);
+        pointer-events: auto;
       }
 
-      /* LOGO BACKGROUND (NEW) */
+      /* Logo Background */
       .logo-bg {
         position: absolute;
         top: 50%;
@@ -49,7 +50,7 @@
         display: none;
       }
 
-      /* OVERLAY */
+      /* Overlay */
       .overlay {
         position: fixed;
         top: 0;
@@ -60,7 +61,7 @@
         z-index: -1;
       }
 
-      /* CLOCK PANEL */
+      /* Clock panel */
       .container {
         text-align: center;
         margin: 8vh auto;
@@ -72,6 +73,11 @@
         border-radius: 16px;
         box-shadow: 0 8px 30px rgba(0,0,0,0.5);
         border: 2px solid var(--primary);
+        transition: border 0.5s ease;
+      }
+
+      h1, h2 {
+        color: white;
       }
 
       h1 {
@@ -98,6 +104,7 @@
 
       thead {
         background: rgba(255,255,255,0.1);
+        font-weight: 500;
       }
 
       tbody tr {
@@ -118,7 +125,7 @@
         opacity: 0.5;
       }
 
-      /* DROPDOWN */
+      /* Dropdown */
       .video-picker {
         position: fixed;
         top: 10px;
@@ -133,9 +140,12 @@
         background: rgba(0,0,0,0.6);
         color: white;
         font-size: 0.9rem;
+        outline: none;
         cursor: pointer;
       }
     </style>
+
+    <script defer src="script.js"></script>
   </head>
 
   <body>
@@ -144,12 +154,12 @@
     <div class="video-picker">
       <select id="modeSelect" onchange="setMode(this.value)">
         <optgroup label="School Themes">
-          <option value="east">Glenbard East</option>
           <option value="north">Glenbard North</option>
+          <option value="east">Glenbard East</option>
           <option value="south">Glenbard South</option>
           <option value="west">Glenbard West</option>
         </optgroup>
-        
+
         <optgroup label="Animal Cams">
           <option value="otter">Otters</option>
           <option value="jellyfish">Jellyfish</option>
@@ -161,7 +171,7 @@
       </select>
     </div>
 
-    <!-- VIDEO -->
+    <!-- BACKGROUND VIDEO -->
     <div class="video-bg" id="videoBg">
       <iframe
         id="bgVideo"
@@ -171,9 +181,6 @@
       </iframe>
     </div>
 
-    <!-- LOGO LAYER (NEW) -->
-    <img id="logoBg" class="logo-bg" src="" />
-
     <div class="overlay"></div>
 
     <!-- CLOCK -->
@@ -181,10 +188,52 @@
       <h2 id="day"></h2>
       <h2 id="date"></h2>
       <h1 id="time"></h1>
-      <!-- rest unchanged -->
+
+      <table>
+        <thead>
+          <tr>
+            <td>CURRENT CLASS</td>
+            <th>ENDS AT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="current"></td>
+            <td id="end"></td>
+          </tr>
+        </tbody>
+
+        <thead>
+          <tr>
+            <td>NEXT CLASS</td>
+            <th>STARTS AT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="next"></td>
+            <td id="start"></td>
+          </tr>
+        </tbody>
+
+        <thead>
+          <tr>
+            <td colspan="2">TIME REMAINING</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" id="remaining"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="lunch" onclick="updateLunch()"></h2>
     </div>
 
-    <div class="brand">Glenbard Clock Provided By Paul Gajewski</div>
+    <div class="brand">
+      Glenbard Clock Provided By Paul Gajewski
+    </div>
 
     <!-- SCRIPT -->
     <script>
@@ -198,10 +247,10 @@
       };
 
       const themes = {
-        east:  { primary: "rgb(235,0,41)", secondary: "black", logo: "images/east.png" },
-        north: { primary: "rgb(205,151,0)", secondary: "black", logo: "images/north.png" },
-        south: { primary: "rgb(235,0,41)", secondary: "rgb(46,85,151)", logo: "images/south.png" },
-        west:  { primary: "rgb(0,88,60)", secondary: "rgb(0,88,60)", logo: "images/west.png" }
+        east:  { primary: "rgb(235,0,41)", secondary: "black" },
+        north: { primary: "rgb(205,151,0)", secondary: "black" },
+        south: { primary: "rgb(235,0,41)", secondary: "rgb(46,85,151)" },
+        west:  { primary: "rgb(0,88,60)", secondary: "rgb(0,88,60)" }
       };
 
       function setMode(value) {
@@ -209,8 +258,8 @@
         const videoBg = document.getElementById("videoBg");
         const logo = document.getElementById("logoBg");
 
+
         if (videos[value]) {
-          // VIDEO MODE
           videoBg.style.display = "block";
           video.src = videos[value];
 
@@ -221,7 +270,6 @@
           document.body.style.background = "black";
 
         } else if (themes[value]) {
-          // SCHOOL MODE
           videoBg.style.display = "none";
 
           const t = themes[value];
