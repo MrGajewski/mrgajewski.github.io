@@ -310,3 +310,71 @@ function updateTime() {
     i===lunch ? `<b><u>${l}</u></b>` : l
   ).join(" ")}`;
 }
+
+const videos = {
+  otter: "https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0",
+  jellyfish: "https://www.youtube.com/embed/m1XcdxjVGos?autoplay=1&mute=1&controls=0",
+  moonjelly: "https://www.youtube.com/embed/7N9-FODmuBA?autoplay=1&mute=1&controls=0",
+  wildlife: "https://www.youtube.com/embed/F0GOOP82094?autoplay=1&mute=1&controls=0",
+  penguin: "https://www.youtube.com/embed/HHp4rjhJsWI?autoplay=1&mute=1&controls=0",
+  baldeagle: "https://www.youtube.com/embed/B4-L2nfGcuE?autoplay=1&mute=1&controls=0"
+};
+
+const themes = {
+  east:  { primary: "rgb(235,0,41)", secondary: "black", logo: "images/east.png" },
+  north: { primary: "rgb(205,151,0)", secondary: "black", logo: "images/north.png" },
+  south: { primary: "rgb(235,0,41)", secondary: "rgb(46,85,151)", logo: "images/south.png" },
+  west:  { primary: "rgb(0,88,60)", secondary: "rgb(0,88,60)", logo: "images/west.png" }
+};
+
+function setMode(value) {
+  
+  if (value === "left" || value === "center" || value === "right") {
+    setClockPosition(value);
+    return;
+  }
+
+  const video = document.getElementById("bgVideo");
+  const videoBg = document.getElementById("videoBg");
+  const logo = document.getElementById("logoBg");
+
+  if (videos[value]) {
+    // VIDEO MODE
+    videoBg.style.display = "block";
+    video.src = videos[value];
+
+    logo.style.display = "none";
+
+    document.documentElement.style.setProperty("--primary", "white");
+    document.documentElement.style.setProperty("--secondary", "black");
+    document.querySelector(".container").style.border = "2px solid transparent";
+    document.querySelector(".container").style.boxShadow = "0 8px 30px rgba(0,0,0,0.5)";
+    document.body.style.background = "black";
+
+  } else if (themes[value]) {
+    // SCHOOL MODE
+    videoBg.style.display = "none";
+
+    const t = themes[value];
+
+    logo.src = t.logo;
+    logo.style.display = "block";
+
+    document.documentElement.style.setProperty("--primary", t.primary);
+    document.documentElement.style.setProperty("--secondary", t.secondary);
+    document.querySelector(".container").style.border = "2px solid " + t.primary;
+    document.querySelector(".container").style.boxShadow = "0 0 20px " + t.primary;
+    document.body.style.background = t.secondary;
+  }
+}
+
+function setClockPosition(pos) {
+  const container = document.querySelector(".container");
+
+  container.classList.remove("left", "center", "right");
+  container.classList.add(pos);
+}
+
+window.onload = function () {
+  setMode("north");
+};
