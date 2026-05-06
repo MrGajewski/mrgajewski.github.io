@@ -67,11 +67,30 @@
         padding: 25px 40px;
         width: fit-content;
 
+        text-align: center;
+        margin: 8vh auto;
+        transition: margin 0.5s ease;
+
         background: rgba(0,0,0,0.35);
         backdrop-filter: blur(10px);
         border-radius: 16px;
         box-shadow: 0 8px 30px rgba(0,0,0,0.5);
         border: 2px solid var(--primary);
+      }
+
+      .container.left {
+        margin-left: 5vw;
+        margin-right: auto;
+      }
+      
+      .container.center {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      .container.right {
+        margin-left: auto;
+        margin-right: 5vw;
       }
 
       h1 {
@@ -161,10 +180,10 @@
           <option value="baldeagle">Bald Eagle</option>
         </optgroup>
         
-        <optgroup label="Video Position">
-          <option value="left">Video Left</option>
-          <option value="center">Video Center</option>
-          <option value="right">Video Right</option>
+        <optgroup label="Clock Position">
+          <option value="left">Left</option>
+          <option value="center">Center</option>
+          <option value="right">Right</option>
         </optgroup>
       </select>
     </div>
@@ -255,7 +274,7 @@
       function setMode(value) {
         
         if (value === "left" || value === "center" || value === "right") {
-          setVideoPosition(value);
+          setClockPosition(value);
           return;
         }
 
@@ -267,8 +286,6 @@
           // VIDEO MODE
           videoBg.style.display = "block";
           video.src = videos[value];
-
-          setVideoPosition("center");
 
           logo.style.display = "none";
 
@@ -295,25 +312,13 @@
         }
       }
 
-      function setVideoPosition(pos) {
-        const iframe = document.getElementById("bgVideo");
+      function setClockPosition(pos) {
+        const container = document.querySelector(".container");
       
-        if (pos === "left") {
-          iframe.style.left = "25%";
-          iframe.style.transform = "translate(-50%, -50%)";
-        }
-      
-        if (pos === "center") {
-          iframe.style.left = "50%";
-          iframe.style.transform = "translate(-50%, -50%)";
-        }
-      
-        if (pos === "right") {
-          iframe.style.left = "75%";
-          iframe.style.transform = "translate(-50%, -50%)";
-        }
+        container.classList.remove("left", "center", "right");
+        container.classList.add(pos);
       }
-      
+
       window.onload = function () {
         setMode("north");
       };
