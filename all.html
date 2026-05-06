@@ -160,6 +160,12 @@
           <option value="penguin">Penguin</option>
           <option value="baldeagle">Bald Eagle</option>
         </optgroup>
+        
+        <optgroup label="Video Position">
+          <option value="left">Video Left</option>
+          <option value="center">Video Center</option>
+          <option value="right">Video Right</option>
+        </optgroup>
       </select>
     </div>
 
@@ -247,6 +253,12 @@
       };
 
       function setMode(value) {
+        
+        if (value === "left" || value === "center" || value === "right") {
+          setVideoPosition(value);
+          return;
+        }
+
         const video = document.getElementById("bgVideo");
         const videoBg = document.getElementById("videoBg");
         const logo = document.getElementById("logoBg");
@@ -255,6 +267,8 @@
           // VIDEO MODE
           videoBg.style.display = "block";
           video.src = videos[value];
+
+          setVideoPosition("center");
 
           logo.style.display = "none";
 
@@ -278,6 +292,25 @@
           document.querySelector(".container").style.border = "2px solid " + t.primary;
           document.querySelector(".container").style.boxShadow = "0 0 20px " + t.primary;
           document.body.style.background = t.secondary;
+        }
+      }
+
+      function setVideoPosition(pos) {
+        const iframe = document.getElementById("bgVideo");
+      
+        if (pos === "left") {
+          iframe.style.left = "25%";
+          iframe.style.transform = "translate(-50%, -50%)";
+        }
+      
+        if (pos === "center") {
+          iframe.style.left = "50%";
+          iframe.style.transform = "translate(-50%, -50%)";
+        }
+      
+        if (pos === "right") {
+          iframe.style.left = "75%";
+          iframe.style.transform = "translate(-50%, -50%)";
         }
       }
       
