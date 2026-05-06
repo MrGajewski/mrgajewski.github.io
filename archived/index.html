@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Glenbard Clock</title>
+    <base target="_top">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Actor">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Gruppo">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Consolas">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=WindSong">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+
+    <p>&nbsp</p>
+
+    <h2 id="day"></h2>
+    <h2 id="date"></h2>
+    <h1 id="time"></h1>
+    <table>
+      <thead>
+        <tr>
+          <td>CURRENT CLASS</td>
+          <th>ENDS AT</td>
+        </tr>
+      <thead>
+      <tbody>
+        <tr>
+          <td id="current"></td>
+          <td id="end"></td>
+        </tr>
+      </tbody>
+      <thead>
+        <tr>
+          <td>NEXT CLASS</td>
+          <th>STARTS AT</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="next"></td>
+          <td id="start"></td>
+        </tr>
+      </tbody>
+      <thead>
+        <tr>
+          <td colspan=2>TIME REMAINING</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan=2 id="remaining"></td>
+        </tr>
+      </tbody>
+    </table>
+    <h2 id="lunch" onclick="updateLunch()"></h2>
+    <div class="brand">Glenbard Clock Provided By Paul Gajewski</div>
+  </body>
+</html>
