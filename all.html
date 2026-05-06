@@ -146,8 +146,8 @@
     <div class="video-picker">
       <select id="modeSelect" onchange="setMode(this.value)">
         <optgroup label="School Themes">
-          <option value="east">Glenbard East</option>
           <option value="north">Glenbard North</option>
+          <option value="east">Glenbard East</option>
           <option value="south">Glenbard South</option>
           <option value="west">Glenbard West</option>
         </optgroup>
@@ -260,6 +260,8 @@
 
           document.documentElement.style.setProperty("--primary", "white");
           document.documentElement.style.setProperty("--secondary", "black");
+          document.querySelector(".container").style.border = "2px solid transparent";
+          document.querySelector(".container").style.boxShadow = "0 8px 30px rgba(0,0,0,0.5)";
           document.body.style.background = "black";
 
         } else if (themes[value]) {
@@ -273,9 +275,15 @@
 
           document.documentElement.style.setProperty("--primary", t.primary);
           document.documentElement.style.setProperty("--secondary", t.secondary);
+          document.querySelector(".container").style.border = "2px solid " + t.primary;
+          document.querySelector(".container").style.boxShadow = "0 0 20px " + t.primary;
           document.body.style.background = t.secondary;
         }
       }
+      
+      window.onload = function () {
+        setMode("north");
+      };
     </script>
 
   </body>
