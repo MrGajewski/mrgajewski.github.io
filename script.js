@@ -2,6 +2,7 @@ const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Satur
 const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 let lunch = 0;
+let displayStyle = "period";
 
 // DOM cache
 const el = {
@@ -13,7 +14,8 @@ const el = {
   next: document.getElementById("next"),
   start: document.getElementById("start"),
   remaining: document.getElementById("remaining"),
-  lunch: document.getElementById("lunch")
+  lunch: document.getElementById("lunch"),
+  dayScheduleBody: document.getElementById("dayScheduleBody")
 };
 
 el.lunch.onclick = () => {
@@ -21,6 +23,7 @@ el.lunch.onclick = () => {
 };
 
 setInterval(updateTime, 500);
+
 
 // ---------- Period class ----------
 
@@ -46,24 +49,30 @@ class Period {
   }
 }
 
+
 // ---------- Helpers ----------
 
 function formatTime(date, withSeconds=false) {
   const h = (date.getHours() % 12 || 12).toString().padStart(2,'0');
   const m = date.getMinutes().toString().padStart(2,'0');
   const s = (date.getSeconds() + 1).toString().padStart(2,'0');
-  return withSeconds ? `${h}:${m}:${s}` : `${h}:${m}`;
+
+  return withSeconds
+    ? `${h}:${m}:${s}`
+    : `${h}:${m}`;
 }
 
 function msToTime(ms) {
-  const s = Math.floor((ms/1000)%60);
-  const m = Math.floor((ms/60000)%60);
-  const h = Math.floor(ms/3600000);
+  const s = Math.floor((ms / 1000) % 60);
+  const m = Math.floor((ms / 60000) % 60);
+  const h = Math.floor(ms / 3600000);
+
   return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
 
 function getOrdinal(n) {
   if (n >= 11 && n <= 13) return "th";
+
   switch (n % 10) {
     case 1: return "st";
     case 2: return "nd";
@@ -71,6 +80,7 @@ function getOrdinal(n) {
     default: return "th";
   }
 }
+
 
 // ---------- Schedule Data ----------
 
@@ -125,36 +135,37 @@ const SCHEDULES = {
       ["Period 5","13:30","15:00"]
     ]
   },
-  
-THURSDAY: {
-  A: [
-    ["Period 4","08:00","09:30"],
-    ["Period 2","09:35","11:05"],
-    ["Lunch","11:10","11:50"],
-    ["Period 8A","11:55","13:25"],
-    ["Period 6","13:30","15:00"]
-  ],
 
-  B: [
-    ["Period 4","08:00","09:30"],
-    ["Period 2","09:35","11:05"],
-    ["Period 8B","11:10","11:55"],
-    ["Lunch","11:58","12:38"],
-    ["Period 8B","12:41","13:25"],
-    ["Period 6","13:30","15:00"]
-  ],
+  THURSDAY: {
+    A: [
+      ["Period 4","08:00","09:30"],
+      ["Period 2","09:35","11:05"],
+      ["Lunch","11:10","11:50"],
+      ["Period 8A","11:55","13:25"],
+      ["Period 6","13:30","15:00"]
+    ],
 
-  C: [
-    ["Period 4","08:00","09:30"],
-    ["Period 2","09:35","11:05"],
-    ["Period 8C","11:10","12:40"],
-    ["Lunch","12:45","13:25"],
-    ["Period 6","13:30","15:00"]
-  ]
-},
-  
-WEEKEND: []
+    B: [
+      ["Period 4","08:00","09:30"],
+      ["Period 2","09:35","11:05"],
+      ["Period 8B","11:10","11:55"],
+      ["Lunch","11:58","12:38"],
+      ["Period 8B","12:41","13:25"],
+      ["Period 6","13:30","15:00"]
+    ],
+
+    C: [
+      ["Period 4","08:00","09:30"],
+      ["Period 2","09:35","11:05"],
+      ["Period 8C","11:10","12:40"],
+      ["Lunch","12:45","13:25"],
+      ["Period 6","13:30","15:00"]
+    ]
+  },
+
+  WEEKEND: []
 };
+
 
 const SPECIAL_DAYS = {
   "2026-04-24": [
@@ -200,7 +211,7 @@ const SPECIAL_DAYS = {
     ["Period 7","13:19","14:07"],
     ["Period 8","14:12","15:00"]
   ],
-  
+
   "2026-08-13": [
     ["Period 1","08:00","08:48"],
     ["Period 2","08:53","09:42"],
@@ -211,7 +222,7 @@ const SPECIAL_DAYS = {
     ["Period 7","13:19","14:07"],
     ["Period 8","14:12","15:00"]
   ],
-  
+
   "2026-08-28": [
     ["Period 1","08:00","08:33"],
     ["Period 2","08:38","09:12"],
@@ -224,14 +235,15 @@ const SPECIAL_DAYS = {
   ]
 };
 
+
 // ---------- Build Periods ----------
 
 function buildPeriods(schedule, date) {
   const y = date.getFullYear();
-  const m = (date.getMonth()+1).toString().padStart(2,'0');
+  const m = (date.getMonth() + 1).toString().padStart(2,'0');
   const d = date.getDate().toString().padStart(2,'0');
 
-  return schedule.map(([name,start,end]) =>
+  return schedule.map(([name, start, end]) =>
     new Period(
       name,
       new Date(`${y}-${m}-${d}T${start}:00`),
@@ -240,24 +252,38 @@ function buildPeriods(schedule, date) {
   );
 }
 
+
 function getPeriods() {
   const date = new Date();
   const day = date.getDay();
   const lunchKey = ["A","B","C"][lunch];
   const key = date.toISOString().split("T")[0];
 
-  if (SPECIAL_DAYS[key]) return buildPeriods(SPECIAL_DAYS[key], date);
+  if (SPECIAL_DAYS[key]) {
+    return buildPeriods(SPECIAL_DAYS[key], date);
+  }
 
   let schedule;
 
-  if (day === 0 || day === 6) schedule = SCHEDULES.WEEKEND;
-  else if (day === 1 || day === 5) schedule = SCHEDULES.WEEKDAY_MF;
-  else if (day === 2) schedule = SCHEDULES.TUESDAY;
-  else if (day === 3) schedule = SCHEDULES.WEDNESDAY[lunchKey];
-  else if (day === 4) schedule = SCHEDULES.THURSDAY[lunchKey];
+  if (day === 0 || day === 6) {
+    schedule = SCHEDULES.WEEKEND;
+  }
+  else if (day === 1 || day === 5) {
+    schedule = SCHEDULES.WEEKDAY_MF;
+  }
+  else if (day === 2) {
+    schedule = SCHEDULES.TUESDAY;
+  }
+  else if (day === 3) {
+    schedule = SCHEDULES.WEDNESDAY[lunchKey];
+  }
+  else if (day === 4) {
+    schedule = SCHEDULES.THURSDAY[lunchKey];
+  }
 
   return buildPeriods(schedule, date);
 }
+
 
 // ---------- Current Logic ----------
 
@@ -279,7 +305,9 @@ function getCurrent() {
     remaining: ""
   };
 
-  if (dayIndex === 0 || dayIndex === 6) return result;
+  if (dayIndex === 0 || dayIndex === 6) {
+    return result;
+  }
 
   if (periods.length && now < periods[0].start) {
     result.current = "Before School";
@@ -297,15 +325,17 @@ function getCurrent() {
 
   for (let i = 0; i < periods.length; i++) {
     const p = periods[i];
-    const next = periods[i+1];
+    const next = periods[i + 1];
 
     if (now >= p.start && now <= p.end) {
       result.current = p.name;
       result.end = p.endTime;
+
       if (next) {
         result.next = next.name;
         result.start = next.startTime;
       }
+
       result.remaining = msToTime(p.end - now);
       return result;
     }
@@ -323,13 +353,63 @@ function getCurrent() {
   return result;
 }
 
+
+// ---------- Full Day Display ----------
+
+function updateDaySchedule() {
+  const periods = getPeriods();
+  const now = new Date();
+
+  el.dayScheduleBody.innerHTML = "";
+
+  periods.forEach(p => {
+    const row = document.createElement("tr");
+
+    if (now >= p.start && now <= p.end) {
+      row.classList.add("current-period");
+    }
+
+    row.innerHTML = `
+      <td>${p.name}</td>
+      <td>${p.startTime}</td>
+      <td>${p.endTime}</td>
+    `;
+
+    el.dayScheduleBody.appendChild(row);
+  });
+}
+
+
+// ---------- Display Style ----------
+
+function setDisplayStyle(value) {
+  displayStyle = value;
+
+  const periodDisplay = document.getElementById("periodDisplay");
+  const dayDisplay = document.getElementById("dayDisplay");
+
+  if (value === "day") {
+    periodDisplay.style.display = "none";
+    dayDisplay.style.display = "block";
+
+    updateDaySchedule();
+  }
+  else {
+    periodDisplay.style.display = "block";
+    dayDisplay.style.display = "none";
+  }
+}
+
+
 // ---------- UI ----------
 
 function updateTime() {
   const data = getCurrent();
 
   el.day.textContent = data.day;
-  el.date.textContent = `${data.month} ${data.date}${getOrdinal(data.date)}, ${data.year}`;
+  el.date.textContent =
+    `${data.month} ${data.date}${getOrdinal(data.date)}, ${data.year}`;
+
   el.time.textContent = data.time;
 
   el.current.textContent = data.current;
@@ -339,10 +419,20 @@ function updateTime() {
   el.remaining.textContent = data.remaining;
 
   const labels = ["A","B","C"];
-  el.lunch.innerHTML = `LUNCH: ${labels.map((l,i)=>
-    i===lunch ? `<b><u>${l}</u></b>` : l
+
+  el.lunch.innerHTML = `LUNCH: ${labels.map((l,i) =>
+    i === lunch
+      ? `<b><u>${l}</u></b>`
+      : l
   ).join(" ")}`;
+
+  if (displayStyle === "day") {
+    updateDaySchedule();
+  }
 }
+
+
+// ---------- Videos ----------
 
 const videos = {
   otter: "https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0",
@@ -353,15 +443,40 @@ const videos = {
   baldeagle: "https://www.youtube.com/embed/B4-L2nfGcuE?autoplay=1&mute=1&controls=0"
 };
 
+
+// ---------- Themes ----------
+
 const themes = {
-  east:  { primary: "rgb(235,0,41)", secondary: "black", logo: "images/east.png" },
-  north: { primary: "rgb(205,151,0)", secondary: "black", logo: "images/north.png" },
-  south: { primary: "rgb(235,0,41)", secondary: "rgb(46,85,151)", logo: "images/south.png" },
-  west:  { primary: "rgb(0,88,60)", secondary: "rgb(0,88,60)", logo: "images/west.png" }
+  east: {
+    primary: "rgb(235,0,41)",
+    secondary: "black",
+    logo: "images/east.png"
+  },
+
+  north: {
+    primary: "rgb(205,151,0)",
+    secondary: "black",
+    logo: "images/north.png"
+  },
+
+  south: {
+    primary: "rgb(235,0,41)",
+    secondary: "rgb(46,85,151)",
+    logo: "images/south.png"
+  },
+
+  west: {
+    primary: "rgb(0,88,60)",
+    secondary: "rgb(0,88,60)",
+    logo: "images/west.png"
+  }
 };
 
+
+// ---------- Mode ----------
+
 function setMode(value) {
-  
+
   if (value === "left" || value === "center" || value === "right") {
     setClockPosition(value);
     return;
@@ -372,6 +487,7 @@ function setMode(value) {
   const logo = document.getElementById("logoBg");
 
   if (videos[value]) {
+
     // VIDEO MODE
     videoBg.style.display = "block";
     video.src = videos[value];
@@ -380,11 +496,18 @@ function setMode(value) {
 
     document.documentElement.style.setProperty("--primary", "white");
     document.documentElement.style.setProperty("--secondary", "black");
-    document.querySelector(".container").style.border = "2px solid transparent";
-    document.querySelector(".container").style.boxShadow = "0 8px 30px rgba(0,0,0,0.5)";
+
+    document.querySelector(".container").style.border =
+      "2px solid transparent";
+
+    document.querySelector(".container").style.boxShadow =
+      "0 8px 30px rgba(0,0,0,0.5)";
+
     document.body.style.background = "black";
 
-  } else if (themes[value]) {
+  }
+  else if (themes[value]) {
+
     // SCHOOL MODE
     videoBg.style.display = "none";
 
@@ -395,11 +518,19 @@ function setMode(value) {
 
     document.documentElement.style.setProperty("--primary", t.primary);
     document.documentElement.style.setProperty("--secondary", t.secondary);
-    document.querySelector(".container").style.border = "2px solid " + t.primary;
-    document.querySelector(".container").style.boxShadow = "0 0 20px " + t.primary;
+
+    document.querySelector(".container").style.border =
+      "2px solid " + t.primary;
+
+    document.querySelector(".container").style.boxShadow =
+      "0 0 20px " + t.primary;
+
     document.body.style.background = t.secondary;
   }
 }
+
+
+// ---------- Clock Position ----------
 
 function setClockPosition(pos) {
   const container = document.querySelector(".container");
@@ -407,6 +538,9 @@ function setClockPosition(pos) {
   container.classList.remove("left", "center", "right");
   container.classList.add(pos);
 }
+
+
+// ---------- Startup ----------
 
 window.onload = function () {
   setMode("north");
