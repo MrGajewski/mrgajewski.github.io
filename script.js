@@ -346,8 +346,8 @@ function updateTime() {
 
 const videos = {
   otter: "https://www.youtube.com/embed/9mg9PoFEX2U?autoplay=1&mute=1&controls=0",
-  jellyfish: "https://www.youtube.com/embed/m1XcdxjVGos?autoplay=1&mute=1&controls=0",
-  moonjelly: "https://www.youtube.com/embed/7N9-FODmuBA?autoplay=1&mute=1&controls=0",
+  jellyfish: "https://www.youtube.com/embed/eQ_foBERmzA?autoplay=1&mute=1&controls=0",
+  moonjelly: "https://www.youtube.com/embed/zL68biE6wAs?autoplay=1&mute=1&controls=0",
   wildlife: "https://www.youtube.com/embed/F0GOOP82094?autoplay=1&mute=1&controls=0",
   penguin: "https://www.youtube.com/embed/HHp4rjhJsWI?autoplay=1&mute=1&controls=0",
   baldeagle: "https://www.youtube.com/embed/B4-L2nfGcuE?autoplay=1&mute=1&controls=0"
