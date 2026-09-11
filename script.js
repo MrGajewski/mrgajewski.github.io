@@ -365,9 +365,8 @@ function updateDaySchedule() {
   periods.forEach(p => {
     const row = document.createElement("tr");
 
-    const isCurrent = now >= p.start && now <= p.end;
-
-    if (isCurrent) {
+    // Highlight the period currently in session
+    if (now >= p.start && now < p.end) {
       row.classList.add("current-period");
     }
 
