@@ -365,15 +365,24 @@ function updateDaySchedule() {
   periods.forEach(p => {
     const row = document.createElement("tr");
 
-    if (now >= p.start && now <= p.end) {
+    const isCurrent = now >= p.start && now <= p.end;
+
+    if (isCurrent) {
       row.classList.add("current-period");
     }
 
-    row.innerHTML = `
-      <td>${p.name}</td>
-      <td>${p.startTime}</td>
-      <td>${p.endTime}</td>
-    `;
+    const nameCell = document.createElement("td");
+    nameCell.textContent = p.name;
+
+    const startCell = document.createElement("td");
+    startCell.textContent = p.startTime;
+
+    const endCell = document.createElement("td");
+    endCell.textContent = p.endTime;
+
+    row.appendChild(nameCell);
+    row.appendChild(startCell);
+    row.appendChild(endCell);
 
     el.dayScheduleBody.appendChild(row);
   });
