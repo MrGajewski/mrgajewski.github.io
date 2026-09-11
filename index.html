@@ -7,38 +7,51 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,600">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
-    <link rel="stylesheet" href="style.css">    
+    <link rel="stylesheet" href="style.css">
 
     <script defer src="script.js"></script>
   </head>
 
   <body>
 
-    <!-- DROPDOWN -->
-    <div class="video-picker">
-      <select id="modeSelect" onchange="setMode(this.value)">
-        <optgroup label="School Themes">
-          <option value="north">Glenbard North</option>
-          <option value="east">Glenbard East</option>
-          <option value="south">Glenbard South</option>
-          <option value="west">Glenbard West</option>
-        </optgroup>
-        
-        <optgroup label="Animal Cams">
-          <option value="otter">Otters</option>
-          <option value="jellyfish">Jellyfish</option>
-          <option value="moonjelly">Moon Jelly</option>
-          <option value="wildlife">Wildlife</option>
-          <option value="penguin">Penguin</option>
-          <option value="baldeagle">Bald Eagle</option>
-        </optgroup>
-        
-        <optgroup label="Clock Position">
-          <option value="left">Left</option>
-          <option value="center">Center</option>
-          <option value="right">Right</option>
-        </optgroup>
-      </select>
+    <!-- DROPDOWNS -->
+    <div class="settings">
+
+      <!-- THEME / VIDEO / POSITION -->
+      <div class="video-picker">
+        <select id="modeSelect" onchange="setMode(this.value)">
+          <optgroup label="School Themes">
+            <option value="north">Glenbard North</option>
+            <option value="east">Glenbard East</option>
+            <option value="south">Glenbard South</option>
+            <option value="west">Glenbard West</option>
+          </optgroup>
+          
+          <optgroup label="Animal Cams">
+            <option value="otter">Otters</option>
+            <option value="jellyfish">Jellyfish</option>
+            <option value="moonjelly">Moon Jelly</option>
+            <option value="wildlife">Wildlife</option>
+            <option value="penguin">Penguin</option>
+            <option value="baldeagle">Bald Eagle</option>
+          </optgroup>
+          
+          <optgroup label="Clock Position">
+            <option value="left">Left</option>
+            <option value="center">Center</option>
+            <option value="right">Right</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <!-- DISPLAY STYLE -->
+      <div class="display-picker">
+        <select id="displayStyleSelect" onchange="setDisplayStyle(this.value)">
+          <option value="period">By Period</option>
+          <option value="day">Full Day</option>
+        </select>
+      </div>
+
     </div>
 
     <!-- VIDEO -->
@@ -51,44 +64,74 @@
       </iframe>
     </div>
 
-    <!-- LOGO LAYER (NEW) -->
+    <!-- LOGO LAYER -->
     <img id="logoBg" class="logo-bg" src="" />
 
     <div class="overlay"></div>
 
     <!-- CLOCK -->
     <div class="container">
+
+      <!-- DAY / DATE / TIME -->
       <h2 id="day"></h2>
       <h2 id="date"></h2>
       <h1 id="time"></h1>
 
+
+      <!-- PERIOD DISPLAY -->
+      <div id="periodDisplay">
+
+        <table>
+          <thead>
+            <tr>
+              <td>CURRENT CLASS</td>
+              <th>ENDS AT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="current"></td>
+              <td id="end"></td>
+            </tr>
+          </tbody>
+
+          <thead>
+            <tr>
+              <td>NEXT CLASS</td>
+              <th>STARTS AT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="next"></td>
+              <td id="start"></td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+
+      <!-- FULL DAY DISPLAY -->
+      <div id="dayDisplay" style="display: none;">
+
+        <table id="daySchedule">
+          <thead>
+            <tr>
+              <td>PERIOD</td>
+              <th>STARTS</th>
+              <th>ENDS</th>
+            </tr>
+          </thead>
+
+          <tbody id="dayScheduleBody"></tbody>
+        </table>
+
+      </div>
+
+
+      <!-- TIME REMAINING -->
       <table>
-        <thead>
-          <tr>
-            <td>CURRENT CLASS</td>
-            <th>ENDS AT</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="current"></td>
-            <td id="end"></td>
-          </tr>
-        </tbody>
-
-        <thead>
-          <tr>
-            <td>NEXT CLASS</td>
-            <th>STARTS AT</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="next"></td>
-            <td id="start"></td>
-          </tr>
-        </tbody>
-
         <thead>
           <tr>
             <td colspan="2">TIME REMAINING</td>
@@ -101,7 +144,10 @@
         </tbody>
       </table>
 
+
+      <!-- LUNCH -->
       <h2 id="lunch" onclick="updateLunch()"></h2>
+
     </div>
 
     <div class="brand">Glenbard Clock Provided By Paul Gajewski</div>
