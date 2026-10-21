@@ -311,7 +311,10 @@ function getPeriods() {
   const date = new Date();
   const day = date.getDay();
   const lunchKey = ["A","B","C"][lunch];
-  const key = date.toISOString().split("T")[0];
+  // const key = date.toISOString().split("T")[0];
+  // Use the local calendar date, not UTC
+  const key =
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
   if (SPECIAL_DAYS[key]) {
     const specialSchedule = SPECIAL_DAYS[key];
