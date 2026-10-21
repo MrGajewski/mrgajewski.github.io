@@ -314,7 +314,15 @@ function getPeriods() {
   const key = date.toISOString().split("T")[0];
 
   if (SPECIAL_DAYS[key]) {
-    return buildPeriods(SPECIAL_DAYS[key], date);
+    const specialSchedule = SPECIAL_DAYS[key];
+  
+    // Special day has A/B/C schedules
+    if (!Array.isArray(specialSchedule)) {
+      return buildPeriods(specialSchedule[lunchKey], date);
+    }
+  
+    // Special day has one fixed schedule
+    return buildPeriods(specialSchedule, date);
   }
 
   let schedule;
